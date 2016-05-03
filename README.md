@@ -23,7 +23,8 @@ Additionally, your program need only be concerned with reading logical addresses
 Address Translation
 Your program will translate logical to physical addresses using a TLB and page table as outlined in Section 8.5. First, the page number is extracted from the logical address, and the TLB is consulted. In the case of a TLB-hit, the frame number is obtained from the TLB. In the case of a TLB-miss, the page table must be consulted. In the latter case, either the frame number is obtained
 
-
+![Alt Text](http://i.imgur.com/N979WuP.png)
+![Alt Text](http://i.imgur.com/GJsPrfd.png)
 
 from the page table or a page fault occurs. A visual representation of the address-translation process appears in Figure 9.34.
 
