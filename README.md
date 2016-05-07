@@ -11,12 +11,12 @@ This project consists of writing a program that translates logical to physical a
 Your program will read a file containing several 32-bit integer numbers that represent logical addresses. However, you need only be concerned with 16-bit addresses, so you must mask the rightmost 16 bits of each logical address. These 16 bits are divided into (1) an 8-bit page number and (2) 8-bit page offset. Hence, the addresses are structured as shown in Figure 9.33.
 
 Other specifics include the following:
-• 28 entries in the page table
-• Page size of 28 bytes
-• 16 entries in the TLB
-• Frame size of 28 bytes
-• 256 frames
-• Physical memory of 65,536 bytes (256 frames × 256-byte frame size)
+- 28 entries in the page table
+- Page size of 28 bytes
+- 16 entries in the TLB
+- Frame size of 28 bytes
+- 256 frames
+- Physical memory of 65,536 bytes (256 frames × 256-byte frame size)
 
 Additionally, your program need only be concerned with reading logical addresses and translating them to their corresponding physical addresses. You do not need to support writing to the logical address space.
 
@@ -47,14 +47,15 @@ Your program should run as follows:
 
 ./vmgr addresses.txt
 
-Your program will read in the file addresses.txt,which contains 1,000 logical addresses ranging from 0 to 65535. Your program is to translate each logical address to a physical address and determine the contents of the signed byte stored at the correct physical address. (Recall that in the C language, the char data type occupies a byte of storage, so we suggest using char values.)  Your program is to output the following values:
+Your program will read in the file addresses.txt, which contains 1,000 logical addresses ranging from 0 to 65535. Your program is to translate each logical address to a physical address and determine the contents of the signed byte stored at the correct physical address. (Recall that in the C language, the char data type occupies a byte of storage, so we suggest using char values.)  Your program is to output the following values:
 
 1. The logical address being translated (the integer value being read from addresses.txt).
 2. The corresponding physical address (what your program translates the logical address to).
 3. The signed byte value stored at the translated physical address.
 
 We also provide the file correct.txt, which contains the correct output values for the file addresses.txt. You should use this file to determine if your program is correctly translating logical to physical addresses.
-Statistics
+
+##### Statistics
 After completion, your program is to report the following statistics:
 
 1. Page-fault rate—The percentage of address references that resulted in page faults.
