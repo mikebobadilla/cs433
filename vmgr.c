@@ -23,18 +23,25 @@ int main(int argc, char *argv[])
 
   // READ BY CHARACTER
   char c;
-  while((c = fgetc(pFile)) != EOF)
-  {
-    printf("%c", c);
-  }
+  // while((c = fgetc(pFile)) != EOF)
+  // {
+  //   printf("%c", c);
+  // }
 
-  // READ BY LINE
+// READ BY LINE
+  printf("Read By Line\n" );
   char *line = NULL;
   size_t len = 0;
   ssize_t read;
+  // int x =  28720 % 256;
+  // printf("28720 and 65280: %d\n", x);
   while((read = getline(&line, &len, pFile)) != -1)
   {
-    printf("%s", line);
+      // int x = (int)*line & 65280;
+      // int y = (int)*line & 255;
+      // printf("Page Number = %d\n", x);
+      // printf("Offset = %d\n", y);
+      printf("%zd\n", *line);
   }
   free(line);
   fclose(pFile);
