@@ -10,9 +10,14 @@
 #include <string.h>
 #include <errno.h>
 
-const int BLOCK_SIZE = 256;
+const int PAGE_SIZE = 256;
+const int VM_SIZE = 256;
+const int MM_SIZE = 128;
 
 int main(int argc, char *argv[]){
+
+    int physical_memory[MM_SIZE];
+    int virtual_memory[VM_SIZE];
 
     // Check to see if correct arguments exist
     if(argc != 2){
@@ -70,12 +75,12 @@ int main(int argc, char *argv[]){
 
 
         //calculates the physical address
-        physicalAddress = (page_number * BLOCK_SIZE) + offset;
+        physicalAddress = (page_number * PAGE_SIZE) + offset;
 
 
         //printing formatting for Physical Address
         if (page >= 32768) {
-            printf("Physical Address: Page Fault\n");
+            printf("Physical Address: DISK\n");
             pageFaultCount++;
         }
         else{
