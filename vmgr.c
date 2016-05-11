@@ -58,10 +58,6 @@ int main(int argc, char *argv[]){
     printf("==================================\n" );
     printf("||    Virtual Memory Manager    ||\n" );
     printf("==================================\n" );
-    printf("Logical Page Number Size: 8 bits\n");
-    printf("Logical Offset Size: 8 bits\n");
-    printf("Physical Page Number Size: 7 bits\n");
-    printf("Physical Offset Size: 8 bits\n\n");
 
     printf("Translating 1000 Logical Addresses: \n\n");
 
