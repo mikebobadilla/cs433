@@ -70,9 +70,9 @@ int main(int argc, char *argv[]){
         int page_table_number = page >> 8;
         // printf("page table number %d\n", page_table_number);
 
-        if(virtual_memory[page_table_number] < 0){
-          pageFaultRate++;
-          printf("PAGE FAULT: page_table_number: %d\n", page_table_number);
+        if(virtual_memory[page_table_number][0] < 0){
+          pageFaultCount++;
+          // printf("PAGE FAULT: page_table_number: %d\n", page_table_number);
 
           // EVICT SOMEONE
           int largest = 0;
@@ -103,13 +103,13 @@ int main(int argc, char *argv[]){
 
 
         //calculates the physical address
-        physicalAddress = (page_number * PAGE_SIZE) + offset;
+        physicalAddress = (virtual_memory[page_table_number][0] * PAGE_SIZE) + offset;
 
 
         //printing formatting for Physical Address
         if (page >= 32768) {
             printf("Physical Address: DISK\n");
-            pageFaultCount++;
+            // pageFaultCount++;
         }
         else{
             printf("Physical Address: %d\n", physicalAddress);
