@@ -23,11 +23,11 @@ int main(int argc, char *argv[]){
     // INITIAL PAGE TABLE FILLING
     // [0] Physical Address [1] Age
     for(int i = 0; i < VM_SIZE; i++){
-      virtual_memory[i][0] = (i > MM_SIZE)? -1 : i;
-      virtual_memory[i][1] = (i > MM_SIZE)? -1 : MM_SIZE - i;
+        virtual_memory[i][0] = (i > MM_SIZE)? -1 : i;
+        virtual_memory[i][1] = (i > MM_SIZE)? -1 : MM_SIZE - i;
     }
     for(int i = 0; i < MM_SIZE; i++){
-      physical_memory[i] = i;
+        physical_memory[i] = i;
     }
 
     // Check to see if correct arguments exist
@@ -71,26 +71,24 @@ int main(int argc, char *argv[]){
         int offset = atoi(line) & 255;
         int page = atoi(line) & 65280;
         int page_table_number = page >> 8;
-        // printf("page table number %d\n", page_table_number);
 
         if(virtual_memory[page_table_number][0] < 0){
-          pageFaultCount++;
-          // printf("PAGE FAULT: page_table_number: %d\n", page_table_number);
+            pageFaultCount++;
 
-          // EVICT SOMEONE
-          int largest = 0;
-          int evict = 0;
-          for(int i = 0; i < VM_SIZE; i++){
-            if(virtual_memory[i][1] > largest){
-              largest = virtual_memory[i][1];
-              evict = i;
+            // EVICT SOMEONE
+            int largest = 0;
+            int evict = 0;
+            for(int i = 0; i < VM_SIZE; i++){
+                if(virtual_memory[i][1] > largest){
+                    largest = virtual_memory[i][1];
+                    evict = i;
+                }
             }
-          }
 
-          virtual_memory[page_table_number][0] = virtual_memory[evict][0];
-          virtual_memory[page_table_number][1] = 0;
-          virtual_memory[evict][0] = -1;
-          virtual_memory[evict][1] = 0;
+            virtual_memory[page_table_number][0] = virtual_memory[evict][0];
+            virtual_memory[page_table_number][1] = 0;
+            virtual_memory[evict][0] = -1;
+            virtual_memory[evict][1] = 0;
         }
 
         //printing formatting for Virtual Address
@@ -109,14 +107,8 @@ int main(int argc, char *argv[]){
         physicalAddress = (physical_memory[virtual_memory[page_table_number][0]] * PAGE_SIZE) + offset;
 
 
-        //printing formatting for Physical Address
-        // if (page >= 32768) {
-        //     printf("Physical Address: DISK\n");
-        //     // pageFaultCount++;
-        // }
-        // else{
-            printf("Physical Address: %d\n", physicalAddress);
-        // }
+        printf("Physical Address: %d\n", physicalAddress);
+
 
         //resets page number to loop back around and fill the physical addresses that weren't previously filled
         if (physicalAddress >= 32768) {
@@ -126,9 +118,9 @@ int main(int argc, char *argv[]){
 
         page_number++;
 
-      for(int i = 0; i < VM_SIZE; i++){
-        virtual_memory[i][1]++;
-      }
+        for(int i = 0; i < VM_SIZE; i++){
+            virtual_memory[i][1]++;
+        }
     }
 
     //calculates the % of page faults
