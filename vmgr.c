@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
+#include <time.h>
 
 const int PAGE_SIZE = 256;
 const int VM_SIZE = 256;
@@ -20,6 +21,7 @@ int main(int argc, char *argv[]){
 
     int physical_memory[MM_SIZE];
     int virtual_memory[VM_SIZE][2];
+    int tlb[TLB_SIZE][2];
 
     // INITIAL PAGE TABLE FILLING
     // [0] Physical Address [1] Age
@@ -29,6 +31,11 @@ int main(int argc, char *argv[]){
     }
     for(int i = 0; i < MM_SIZE; i++){
         physical_memory[i] = i;
+    }
+
+    for(int i = 0; i < TLB_SIZE; i++){
+      tlb[i][0] = (i > TLB_SIZE - 1)? -1 : i;
+      tlb[i][1] = (i > TLB_SIZE - 1)? -1 : TLB_SIZE - i;
     }
 
     // Check to see if correct arguments exist
@@ -71,9 +78,20 @@ int main(int argc, char *argv[]){
         int offset = atoi(line) & 255;
         int page = atoi(line) & 65280;
         int page_table_number = page >> 8;
+        int tlb_hit = 0;
 
-        if(virtual_memory[page_table_number][0] < 0){
+        for(int i = 0; i < TLB_SIZE; i++){
+         if(tlb[i][0] == page_table_number){
+           tlb_hit = 1;
+           printf("TLB HIT\n");
+           break;
+         }
+       }
+
+        if(virtual_memory[page_table_number][0] < 0 && !tlb_hit){
             pageFaultCount++;
+            srand(time(NULL));
+           int r = rand();
 
             // EVICT SOMEONE
             int largest = 0;
@@ -85,6 +103,9 @@ int main(int argc, char *argv[]){
                 }
             }
 
+            int tlb_replacement = r % 15;
+            tlb[tlb_replacement][0] = page_table_number;
+            tlb[tlb_replacement][1] = virtual_memory[evict][0];
             virtual_memory[page_table_number][0] = virtual_memory[evict][0];
             virtual_memory[page_table_number][1] = 0;
             virtual_memory[evict][0] = -1;
