@@ -19,6 +19,12 @@ int main(int argc, char *argv[]){
     int physical_memory[MM_SIZE];
     int virtual_memory[VM_SIZE];
 
+    // INITIAL PAGE TABLE FILLING
+    //
+    for(int i = 0; i < VM_SIZE; i++){
+      virtual_memory[i] = (i > MM_SIZE)? -1 : i;
+    }
+
     // Check to see if correct arguments exist
     if(argc != 2){
         printf("Incorrect Number of Arguments.\n");
@@ -60,6 +66,8 @@ int main(int argc, char *argv[]){
 
         int offset = atoi(line) & 255;
         int page = atoi(line) & 65280;
+        int page_table_number = page >> 8;
+        // printf("page table number %d\n", page_table_number);
 
 
         //printing formatting for Virtual Address
