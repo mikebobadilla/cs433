@@ -14,6 +14,8 @@ const int PAGE_SIZE = 256;
 const int VM_SIZE = 256;
 const int MM_SIZE = 128;
 
+void increaseAge(int *memory[]);
+
 int main(int argc, char *argv[]){
 
     int physical_memory[MM_SIZE];
@@ -64,7 +66,7 @@ int main(int argc, char *argv[]){
 
 
     while((read = getline(&line, &len, pFile)) != -1){
-
+        increaseAge(&virtual_memory);
         int offset = atoi(line) & 255;
         int page = atoi(line) & 65280;
         int page_table_number = page >> 8;
@@ -121,4 +123,10 @@ int main(int argc, char *argv[]){
 
     exit(EXIT_SUCCESS);
 
+}
+
+void increaseAge(int *memory[]){
+  for(int i = 0; i < VM_SIZE; i++){
+    memory[i][1]++;
+  }
 }
