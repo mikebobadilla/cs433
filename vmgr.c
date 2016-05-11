@@ -13,7 +13,7 @@
 
 const int PAGE_SIZE = 256;
 const int VM_SIZE = 256;
-const int MM_SIZE = 256;
+const int MM_SIZE = 128;
 const int TLB_SIZE = 16;
 
 
