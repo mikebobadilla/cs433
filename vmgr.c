@@ -75,6 +75,19 @@ int main(int argc, char *argv[]){
           printf("PAGE FAULT: page_table_number: %d\n", page_table_number);
 
           // EVICT SOMEONE
+          int largest = 0;
+          int evict = 0;
+          for(int i = 0; i < VM_SIZE; i++){
+            if(virtual_memory[i][1] > largest){
+              largest = virtual_memory[i][1];
+              evict = i;
+            }
+          }
+
+          virtual_memory[page_table_number][0] = virtual_memory[evict][0];
+          virtual_memory[page_table_number][1] = 0;
+          virtual_memory[evict][0] = -1;
+          virtual_memory[evict][1] = 0;
         }
 
         //printing formatting for Virtual Address
