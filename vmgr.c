@@ -23,8 +23,8 @@ int main(int argc, char *argv[]){
     // INITIAL PAGE TABLE FILLING
     // [0] Physical Address [1] Age
     for(int i = 0; i < VM_SIZE; i++){
-        virtual_memory[i][0] = (i > MM_SIZE)? -1 : i;
-        virtual_memory[i][1] = (i > MM_SIZE)? -1 : MM_SIZE - i;
+        virtual_memory[i][0] = (i > MM_SIZE - 1)? -1 : i;
+        virtual_memory[i][1] = (i > MM_SIZE - 1)? -1 : MM_SIZE - i;
     }
     for(int i = 0; i < MM_SIZE; i++){
         physical_memory[i] = i;
@@ -52,7 +52,6 @@ int main(int argc, char *argv[]){
     int page_number = 0;
     int physicalAddress = 0;
     int pageFaultCount = 0;
-    int loopCount = 0;
 
     double pageFaultRate = 0.0;
 
@@ -109,12 +108,6 @@ int main(int argc, char *argv[]){
 
         printf("Physical Address: %d\n", physicalAddress);
 
-
-        //resets page number to loop back around and fill the physical addresses that weren't previously filled
-        if (physicalAddress >= 32768) {
-            loopCount++;
-            page_number = loopCount;
-        }
 
         page_number++;
 
