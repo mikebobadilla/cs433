@@ -17,12 +17,13 @@ const int MM_SIZE = 128;
 int main(int argc, char *argv[]){
 
     int physical_memory[MM_SIZE];
-    int virtual_memory[VM_SIZE];
+    int virtual_memory[VM_SIZE][2];
 
     // INITIAL PAGE TABLE FILLING
-    //
+    // [0] Physical Address [1] Age
     for(int i = 0; i < VM_SIZE; i++){
-      virtual_memory[i] = (i > MM_SIZE)? -1 : i;
+      virtual_memory[i][0] = (i > MM_SIZE)? -1 : i;
+      virtual_memory[i][1] = (i > MM_SIZE)? -1 : MM_SIZE - i;
     }
 
     // Check to see if correct arguments exist
@@ -69,6 +70,12 @@ int main(int argc, char *argv[]){
         int page_table_number = page >> 8;
         // printf("page table number %d\n", page_table_number);
 
+        if(virtual_memory[page_table_number] < 0){
+          pageFaultRate++;
+          printf("PAGE FAULT: page_table_number: %d\n", page_table_number);
+
+          // EVICT SOMEONE
+        }
 
         //printing formatting for Virtual Address
         if (page < 100) {
