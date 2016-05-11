@@ -2,77 +2,42 @@
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
-#include <stdlib.h>
 
+const int BLOCK_SIZE = 256;
 
-int main(int argc, char *argv[]){
+int main(int argc, char *argv[])
+{
+  // Check to see if correct arguments exist
+  if(argc != 2){
+    printf("Incorrect Number of Arguments.\n");
+    return 1;
+  }
 
-    //checks to see if correct number of arguments exist
-    if(argc != 2){
-        printf("Incorrect Number of Arguments.\n");
-        return 1;
-    }
+  FILE *pFile;
+  pFile = fopen(argv[1], "r");
+  if(pFile == NULL)
+  {
+    printf("Error opening a file %s: %s\n", argv[1], strerror(errno));
+    exit(EXIT_FAILURE);
+  }
 
+// READ BY LINE
+  printf("Read By Line\n" );
+  char *line = NULL;
+  size_t len = 0;
+  ssize_t read;
+  int page_number = 0;
+  while((read = getline(&line, &len, pFile)) != -1)
+  {
+      int offset = atoi(line) & 255;
+      int page = atoi(line) & 65280;
+      // printf("Page Number = \t\t%d\n", page);
+      // printf("Offset = \t\t%d\n", offset);
+      printf("Physical Address: \t%d\n", (page_number * BLOCK_SIZE) + offset);
+      page_number++;
+  }
+  free(line);
+  fclose(pFile);
 
-    FILE *pFile;
-    pFile = fopen("address.txt", "r");
-    pFile = fopen(argv[1], "r");
-
-
-    //checks to see if the .txt file supplied is empty
-    if(pFile == NULL){
-        printf("Error opening a file %s: %s\n", argv[1], strerror(errno));
-        exit(EXIT_FAILURE);
-        exit(1);
-    }
-
-//     READ BY CHARACTER
-//    char c;
-//     while((c = fgetc(pFile)) != EOF)
-//     {
-//       printf("%c", c);
-//     }
-
-    // READ BY LINE
-    printf("Read By Line\n" );
-    char *line = NULL;
-    size_t len = 0;
-    ssize_t read;
-
-
-    char *virtualAddress = NULL;
-    char virtualPageNumber[2];
-    char virtualOffset[2];
-
-
-    char physicalAddress[4];
-    char physicalPageNumber[2];
-    char physicalOffset[2];
-
-
-    while((read = getline(&line, &len, pFile)) != -1){
-
-        virtualAddress = line;
-
-        //gets the Virtual Page Number and Offset from the Virtual Address
-        strncpy(virtualPageNumber, virtualAddress, 2);
-        strncpy(virtualOffset, virtualAddress + 2, 2);
-
-        //automatically copies virtual offset and assigns it to the physical offset
-        strncpy(physicalOffset, virtualOffset, 2);
-
-
-
-
-
-
-
-
-    }
-
-
-    free(line);
-    fclose(pFile);
-
-    exit(EXIT_SUCCESS);
+  exit(EXIT_SUCCESS);
 }
