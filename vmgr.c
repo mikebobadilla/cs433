@@ -3,6 +3,8 @@
 #include <string.h>
 #include <errno.h>
 
+const int BLOCK_SIZE = 256;
+
 int main(int argc, char *argv[])
 {
   // Check to see if correct arguments exist
@@ -12,36 +14,27 @@ int main(int argc, char *argv[])
   }
 
   FILE *pFile;
-  // pFile = fopen("address.txt", "r");
   pFile = fopen(argv[1], "r");
   if(pFile == NULL)
   {
-    // printf("Error opening a file %s: %s\n", argv[1], strerror(errno));
+    printf("Error opening a file %s: %s\n", argv[1], strerror(errno));
     exit(EXIT_FAILURE);
-    // exit(1);
   }
-
-  // READ BY CHARACTER
-  char c;
-  // while((c = fgetc(pFile)) != EOF)
-  // {
-  //   printf("%c", c);
-  // }
 
 // READ BY LINE
   printf("Read By Line\n" );
   char *line = NULL;
   size_t len = 0;
   ssize_t read;
-  // int x =  28720 % 256;
-  // printf("28720 and 65280: %d\n", x);
+  int page_number = 0;
   while((read = getline(&line, &len, pFile)) != -1)
   {
-      // int x = (int)*line & 65280;
-      // int y = (int)*line & 255;
-      // printf("Page Number = %d\n", x);
-      // printf("Offset = %d\n", y);
-      printf("%zd\n", *line);
+      int offset = atoi(line) & 255;
+      int page = atoi(line) & 65280;
+      // printf("Page Number = \t\t%d\n", page);
+      // printf("Offset = \t\t%d\n", offset);
+      printf("Physical Address: \t%d\n", (page_number * BLOCK_SIZE) + offset);
+      page_number++;
   }
   free(line);
   fclose(pFile);
