@@ -9,7 +9,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
-#include <time.h>
 
 const int PAGE_SIZE = 256;
 const int VM_SIZE = 256;
@@ -21,20 +20,15 @@ int main(int argc, char *argv[]){
 
     int physical_memory[MM_SIZE];
     int virtual_memory[VM_SIZE][2];
-    int tlb[TLB_SIZE][2];
 
     // INITIAL PAGE TABLE FILLING
     // [0] Physical Address [1] Age
     for(int i = 0; i < VM_SIZE; i++){
-      virtual_memory[i][0] = (i > MM_SIZE - 1)? -1 : i;
-      virtual_memory[i][1] = (i > MM_SIZE - 1)? -1 : MM_SIZE - i;
-    }
-    for(int i = 0; i < 16; i++){
-      tlb[i][0] = (i > 15)? -1 : i;
-      tlb[i][1] = (i > 15)? -1 : 16 - i;
+        virtual_memory[i][0] = (i > MM_SIZE - 1)? -1 : i;
+        virtual_memory[i][1] = (i > MM_SIZE - 1)? -1 : MM_SIZE - i;
     }
     for(int i = 0; i < MM_SIZE; i++){
-      physical_memory[i] = i;
+        physical_memory[i] = i;
     }
 
     // Check to see if correct arguments exist
@@ -59,7 +53,6 @@ int main(int argc, char *argv[]){
     int page_number = 0;
     int physicalAddress = 0;
     int pageFaultCount = 0;
-    int loopCount = 0;
 
     double pageFaultRate = 0.0;
 
@@ -78,42 +71,24 @@ int main(int argc, char *argv[]){
         int offset = atoi(line) & 255;
         int page = atoi(line) & 65280;
         int page_table_number = page >> 8;
-        int tlb_hit = 0;
 
-        for(int i = 0; i < TLB_SIZE; i++){
-          if(tlb[i][0] == page_table_number){
-            tlb_hit = 1;
-            printf("TLB HIT\n");
-            break;
-          }
+        if(virtual_memory[page_table_number][0] < 0){
+            pageFaultCount++;
 
-        }
-
-        if(virtual_memory[page_table_number][0] < 0 && !tlb_hit){
-          srand(time(NULL));
-          int r = rand();
-
-          // printf("TLB MISS\n\n\n");
-          pageFaultCount++;
-          // printf("PAGE FAULT: page_table_number: %d\n", page_table_number);
-
-          // EVICT SOMEONE
-          int largest = 0;
-          int evict = 0;
-          for(int i = 0; i < VM_SIZE; i++){
-            if(virtual_memory[i][1] > largest){
-              largest = virtual_memory[i][1];
-              evict = i;
+            // EVICT SOMEONE
+            int largest = 0;
+            int evict = 0;
+            for(int i = 0; i < VM_SIZE; i++){
+                if(virtual_memory[i][1] > largest){
+                    largest = virtual_memory[i][1];
+                    evict = i;
+                }
             }
-          }
 
-          int tlb_replacement = r % 15;
-          tlb[tlb_replacement][0] = page_table_number;
-          tlb[tlb_replacement][1] = virtual_memory[evict][0];
-          virtual_memory[page_table_number][0] = virtual_memory[evict][0];
-          virtual_memory[page_table_number][1] = 0;
-          virtual_memory[evict][0] = -1;
-          virtual_memory[evict][1] = 0;
+            virtual_memory[page_table_number][0] = virtual_memory[evict][0];
+            virtual_memory[page_table_number][1] = 0;
+            virtual_memory[evict][0] = -1;
+            virtual_memory[evict][1] = 0;
         }
 
         //printing formatting for Virtual Address
@@ -128,12 +103,18 @@ int main(int argc, char *argv[]){
         }
 
 
+        //calculates the physical address
         physicalAddress = (physical_memory[virtual_memory[page_table_number][0]] * PAGE_SIZE) + offset;
+
+
         printf("Physical Address: %d\n", physicalAddress);
 
-      for(int i = 0; i < VM_SIZE; i++){
-        virtual_memory[i][1]++;
-      }
+
+        page_number++;
+
+        for(int i = 0; i < VM_SIZE; i++){
+            virtual_memory[i][1]++;
+        }
     }
 
     //calculates the % of page faults
